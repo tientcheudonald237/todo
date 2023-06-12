@@ -1,0 +1,68 @@
+{
+  "project_info": {
+    "project_number": "870366838358",
+    "project_id": "newtodo-ccd7d",
+    "storage_bucket": "newtodo-ccd7d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:870366838358:android:eba4b7cf4ee675466d45f7",
+        "android_client_info": {
+          "package_name": "com.example.tiktok"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "870366838358-vg2b3pfh9i2fi0dpothpnhj8b14kupjf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDzpWpIuyqvy6ga3m9C_H8vI4jY3JiEZ5o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "870366838358-vg2b3pfh9i2fi0dpothpnhj8b14kupjf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:870366838358:android:5c56b6754a1467856d45f7",
+        "android_client_info": {
+          "package_name": "com.example.todo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "870366838358-vg2b3pfh9i2fi0dpothpnhj8b14kupjf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDzpWpIuyqvy6ga3m9C_H8vI4jY3JiEZ5o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "870366838358-vg2b3pfh9i2fi0dpothpnhj8b14kupjf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
