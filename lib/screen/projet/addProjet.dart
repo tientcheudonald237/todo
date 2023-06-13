@@ -4,14 +4,14 @@ import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:flutter/services.dart';
 
-class CategorieForm extends StatefulWidget {
-  const CategorieForm({super.key});
+class AddProjet extends StatefulWidget {
+  const AddProjet({super.key});
 
   @override
-  State<CategorieForm> createState() => _ProfilPageState();
+  State<AddProjet> createState() => _AddProjetState();
 }
 
-class _ProfilPageState extends State<CategorieForm> {
+class _AddProjetState extends State<AddProjet> {
   Color mainColor = Color.fromARGB(255, 0, 0, 0);
   final _formKey = GlobalKey<FormState>();
   TextEditingController nomController = TextEditingController();
@@ -20,10 +20,10 @@ class _ProfilPageState extends State<CategorieForm> {
 
   Future Valide() async {
     try {
-      final usersRef = FirebaseFirestore.instance.collection('category');
+      final usersRef = FirebaseFirestore.instance.collection('projet');
       await usersRef.doc().set({
         'description': descriptionController.text.trim(),
-        'name': nomController.text.trim(),
+        'nom': nomController.text.trim(),
       });
 
       ScaffoldMessenger.of(context).showSnackBar(
@@ -46,14 +46,13 @@ class _ProfilPageState extends State<CategorieForm> {
       appBar: AppBar(
         // backgroundColor: mainColor,
         title: const Text(
-          "Categorie",
+          "Projet",
           style: TextStyle(
             color: Colors.white,
             fontSize: 22.5,
           ),
         ),
       ),
-      
       body: Form(
         key: _formKey,
         child: SingleChildScrollView(
@@ -96,19 +95,17 @@ class _ProfilPageState extends State<CategorieForm> {
                         border: OutlineInputBorder(), labelText: "description"),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Please enter your surname';
+                        return 'Please enter';
                       }
                       return null;
                     },
                   ),
                 ),
                 Container(
-
                   height: 50,
                   color: Color.fromARGB(240, 48, 48, 48),
                   child: Center(),
                 ),
-                  
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[

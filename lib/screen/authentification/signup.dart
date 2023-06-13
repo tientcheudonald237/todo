@@ -87,9 +87,6 @@ class _SignUpState extends State<SignUp> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Sign Up'),
-      ),
       body: Form(
         key: _formKey,
         child: SingleChildScrollView(

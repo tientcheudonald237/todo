@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:todo/riverpod.dart';
+import 'package:todo/services/riverpod.dart';
 
 class ProfilPage extends ConsumerStatefulWidget {
   const ProfilPage({super.key});
@@ -101,16 +101,6 @@ class _ProfilPageState extends ConsumerState<ProfilPage> {
 @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: mainColor,
-        title: const Text(
-          "Profil",
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 22.5,
-          ),
-        ),
-      ),
       body: Form(
         key: _formKey,
         child: SingleChildScrollView(

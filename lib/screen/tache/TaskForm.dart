@@ -4,9 +4,12 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:todo/riverpod.dart';
+import 'package:todo/services/riverpod.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:intl/intl.dart';
+import 'package:todo/model/Projet.dart';
+
+import '../../model/Category.dart';
 
 class TaskForm extends ConsumerStatefulWidget {
   const TaskForm({super.key});
@@ -20,13 +23,46 @@ class _ProfilPageState extends ConsumerState<TaskForm> {
   final _formKey = GlobalKey<FormState>();
   TextEditingController nomController = TextEditingController();
   TextEditingController prenomController = TextEditingController();
-  String? _selectedLanguage;
+  String? _selectedProjet;
   late String formattedDate;
 
   File? image;
   TextEditingController dateinput = TextEditingController();
   String? _selectedCategory;
   final List<String> _categories = [];
+  List<Projet> projects = [];
+  List<Category> categories = [];
+
+  @override
+  void initState() {
+    super.initState();
+    fetchProjects();
+    fetchCategries();
+  }
+
+  Future<void> fetchProjects() async {
+    final projectCollectionRef =
+        FirebaseFirestore.instance.collection('projet');
+    final snapshot = await projectCollectionRef.get();
+    final projectDocuments = snapshot.docs;
+    setState(() {
+      projects = projectDocuments
+          .map((projectDoc) => Projet.fromJson(projectDoc.data()))
+          .toList();
+    });
+  }
+
+  Future<void> fetchCategries() async {
+    final categoryCollectionRef =
+        FirebaseFirestore.instance.collection('category');
+    final snapshot = await categoryCollectionRef.get();
+    final categoryDocuments = snapshot.docs;
+    setState(() {
+      categories = categoryDocuments
+          .map((categorytDoc) => Category.fromJson(categorytDoc.data()))
+          .toList();
+    });
+  }
 
   Future PickImage() async {
     try {
@@ -70,8 +106,10 @@ class _ProfilPageState extends ConsumerState<TaskForm> {
           'statut': 'attente',
           'picture': downloadUrl,
           'userid': user.uid,
+          'datedebut': DateTime.now().toIso8601String().substring(0, 10),
           'datefin': formattedDate,
           'categorie': _selectedCategory,
+          'projet': _selectedProjet,
         })
         .then((value) => ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(
@@ -199,22 +237,38 @@ class _ProfilPageState extends ConsumerState<TaskForm> {
                   child: DropdownButtonFormField(
                     decoration: const InputDecoration(
                         border: OutlineInputBorder(), labelText: "Category"),
-                    value: _selectedLanguage,
+                    value: _selectedCategory,
                     onChanged: (newValue) {
                       setState(() {
-                        _selectedLanguage = newValue;
+                        _selectedCategory = newValue;
                       });
                     },
-                    items: [
-                      DropdownMenuItem(
-                        value: "fr",
-                        child: Text("travailler"),
-                      ),
-                      DropdownMenuItem(
-                        value: "en",
-                        child: Text("reposer"),
-                      ),
-                    ],
+                    items: categories
+                        .map((category) => DropdownMenuItem(
+                              value: category.nom,
+                              child: Text(category.nom),
+                            ))
+                        .toList(),
+                  ),
+                ),
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                  child: DropdownButtonFormField(
+                    decoration: const InputDecoration(
+                        border: OutlineInputBorder(), labelText: "Projet"),
+                    value: _selectedProjet,
+                    onChanged: (newValue) {
+                      setState(() {
+                        _selectedProjet = newValue;
+                      });
+                    },
+                    items: projects
+                        .map((project) => DropdownMenuItem(
+                              value: project.nom,
+                              child: Text(project.nom),
+                            ))
+                        .toList(),
                   ),
                 ),
                 TextField(
@@ -228,7 +282,7 @@ class _ProfilPageState extends ConsumerState<TaskForm> {
                   onTap: () async {
                     DateTime? pickedDate = await showDatePicker(
                         context: context,
-                        initialDate: DateTime(2023),
+                        initialDate: DateTime.now(),
                         firstDate: DateTime(2023),
                         lastDate: DateTime(2077));
 

@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-import '../categorieForm.dart';
+import 'categorieForm.dart';
 
 class Categorie extends StatefulWidget {
   const Categorie({Key? key}) : super(key: key);
@@ -50,9 +50,6 @@ class _CategorieState extends State<Categorie> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Liste des categories'),
-      ),
       body: listHashtags.isEmpty
           ? const Center(
               child: Text('Aucune Liste'),

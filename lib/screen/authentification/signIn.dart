@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:todo/components/User.dart';
+import 'package:todo/model/User.dart';
 import 'package:todo/screen/authentification/signup.dart';
 import 'package:todo/screen/home.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:todo/riverpod.dart';
+import 'package:todo/services/riverpod.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -83,9 +83,6 @@ class _SignInState extends ConsumerState<SignIn> {
     }
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('SIgn In'),
-      ),
       body: Form(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),

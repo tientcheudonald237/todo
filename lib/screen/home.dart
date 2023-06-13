@@ -1,9 +1,10 @@
-import 'package:convex_bottom_bar/convex_bottom_bar.dart';
+import 'package:bottom_bar/bottom_bar.dart';
 import 'package:flutter/material.dart';
 
-import 'add/Categorie.dart';
-import 'home/home.dart';
+import 'category/categorie.dart';
+import 'tache/home.dart';
 import 'profil/profil.dart';
+import 'projet/Projet.dart';
 
 const _kPages = <String, Widget>{
   'search': FormPage(),
@@ -19,37 +20,54 @@ class HomePages extends StatefulWidget {
 }
 
 class _HomePages extends State<HomePages> {
-  final TabStyle _tabStyle = TabStyle.reactCircle;
+  int _currentPage = 0;
+  final _pageController = PageController();
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 3,
-      initialIndex: 0,
-      child: Scaffold(
-        body: Column(
-          children: [
-            Expanded(
-              child: TabBarView(
-                children: [
-                  for (final icon in _kPages.values) icon,
-                ],
-              ),
-            ),
-          ],
-        ),
-        bottomNavigationBar: ConvexAppBar(
-          style: _tabStyle,
-          backgroundColor: Colors.black,
-          items: const <TabItem>[
-            TabItem(icon: Icon(Icons.home), title: 'Home'),
-            TabItem(icon: Icon(Icons.add), title: ' '),
-            TabItem(icon: Icon(Icons.account_circle_rounded), title: 'profil'),
-          ],
-          color: Colors.black,
-          activeColor: Colors.grey,
-          onTap: (int i) => print('click index=$i'),
-        ),
+    return Scaffold(
+      body: PageView(
+        controller: _pageController,
+        children: const [
+          FormPage(),
+          Categorie(),
+          Projet(),
+          ProfilPage(),
+        ],
+        onPageChanged: (index) {
+          // Use a better state management solution
+          // setState is used for simplicity
+          setState(() => _currentPage = index);
+        },
+      ),
+      bottomNavigationBar: BottomBar(
+        selectedIndex: _currentPage,
+        onTap: (int index) {
+          _pageController.jumpToPage(index);
+          setState(() => _currentPage = index);
+        },
+        items: const <BottomBarItem>[
+          BottomBarItem(
+            icon: Icon(Icons.task_alt),
+            title: Text('Tache'),
+            activeColor: Colors.blue,
+          ),
+          BottomBarItem(
+            icon: Icon(Icons.category),
+            title: Text('Description'),
+            activeColor: Colors.red,
+          ),
+          BottomBarItem(
+            icon: Icon(Icons.light),
+            title: Text('Projet'),
+            activeColor: Colors.green,
+          ),
+          BottomBarItem(
+            icon: Icon(Icons.person),
+            title: Text('User'),
+            activeColor: Colors.orange,
+          ),
+        ],
       ),
     );
   }
