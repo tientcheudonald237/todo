@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:todo/notifier/ProjetNotifier.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -6,8 +5,8 @@ import 'package:todo/services/riverpod.dart';
 
 import 'addProjet.dart';
 
-class ProjetListWidget extends ConsumerWidget {
-  const ProjetListWidget({Key? key}) : super(key: key);
+class Projet extends ConsumerWidget {
+  const Projet({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -32,7 +31,6 @@ class ProjetListWidget extends ConsumerWidget {
                     color: Colors.amber,
                   ),
                   onDismissed: (direction) async {
-                    
                     await ref.read(projetProvider.notifier).deleteprojet(id);
                   },
                   child: GestureDetector(

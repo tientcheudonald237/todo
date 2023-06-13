@@ -11,7 +11,7 @@ class Categorie extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final projetState = ref.watch(categorieProvider.notifier);
     final listHashtags = projetState.state;
-
+    
     Future<void> _getCategories() async {
       final snapshot =
           await FirebaseFirestore.instance.collection('category').get();
