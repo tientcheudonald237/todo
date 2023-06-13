@@ -1,48 +1,43 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'dart:io';
 import 'package:flutter/services.dart';
+import 'package:todo/services/riverpod.dart';
+import 'package:todo/notifier/CategorieNotifier.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class CategorieForm extends StatefulWidget {
+class CategorieForm extends ConsumerWidget {
   const CategorieForm({super.key});
 
   @override
-  State<CategorieForm> createState() => _ProfilPageState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final _formKey = GlobalKey<FormState>();
+    TextEditingController nomController = TextEditingController();
+    TextEditingController descriptionController = TextEditingController();
 
-class _ProfilPageState extends State<CategorieForm> {
-  Color mainColor = Color.fromARGB(255, 0, 0, 0);
-  final _formKey = GlobalKey<FormState>();
-  TextEditingController nomController = TextEditingController();
-  TextEditingController descriptionController = TextEditingController();
-  String? _selectedLanguage;
+    Future Valide() async {
+      try {
+        final usersRef = FirebaseFirestore.instance.collection('category');
+        await usersRef.doc().set({
+          'description': descriptionController.text.trim(),
+          'name': nomController.text.trim(),
+        });
 
-  Future Valide() async {
-    try {
-      final usersRef = FirebaseFirestore.instance.collection('category');
-      await usersRef.doc().set({
-        'description': descriptionController.text.trim(),
-        'name': nomController.text.trim(),
-      });
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text(
-            'nouveau post ajouter',
-            style: TextStyle(color: Colors.amber),
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text(
+              'nouveau post ajouter',
+              style: TextStyle(color: Colors.amber),
+            ),
+            backgroundColor: Colors.blue,
           ),
-          backgroundColor: Colors.blue,
-        ),
-      );
-    } on FirebaseAuthException catch (e) {
-      print('error failed : $e');
+        );
+      } on FirebaseAuthException catch (e) {
+        print('error failed : $e');
+      }
     }
-  }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(      
+    return Scaffold(
       body: Form(
         key: _formKey,
         child: SingleChildScrollView(
@@ -92,12 +87,10 @@ class _ProfilPageState extends State<CategorieForm> {
                   ),
                 ),
                 Container(
-
                   height: 50,
                   color: Color.fromARGB(240, 48, 48, 48),
                   child: Center(),
                 ),
-                  
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[
@@ -107,7 +100,8 @@ class _ProfilPageState extends State<CategorieForm> {
                         color: Colors.blue,
                         child: Text('Valider'),
                         onPressed: () {
-                          Valide();
+                          ref.read(categorieProvider.notifier).addCategory(
+                              nomController.text.trim(), descriptionController.text.trim());
                         }),
                   ],
                 ),

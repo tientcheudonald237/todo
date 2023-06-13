@@ -1,54 +1,40 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-
+import 'package:todo/services/riverpod.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'categorieForm.dart';
 
-class Categorie extends StatefulWidget {
+class Categorie extends ConsumerWidget {
   const Categorie({Key? key}) : super(key: key);
 
   @override
-  _CategorieState createState() => _CategorieState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final projetState = ref.watch(categorieProvider.notifier);
+    final listHashtags = projetState.state;
 
-class _CategorieState extends State<Categorie> {
-  late List<Map<String, dynamic>> listHashtags;
-
-  @override
-  void initState() {
-    super.initState();
-    listHashtags = [];
-    _getCategories();
-  }
-
-  Future<void> _getCategories() async {
-    final snapshot =
-        await FirebaseFirestore.instance.collection('category').get();
-    if (snapshot.docs.isNotEmpty) {
-      for (var doc in snapshot.docs) {
-        final name = doc['name'] as String?;
-        final description = doc['description'] as String?;
-        if (name != null && description != null) {
-          listHashtags.add({
-            'id': doc.id,
-            'name': name,
-            'description': description
-          });
+    Future<void> _getCategories() async {
+      final snapshot =
+          await FirebaseFirestore.instance.collection('category').get();
+      if (snapshot.docs.isNotEmpty) {
+        for (var doc in snapshot.docs) {
+          final name = doc['name'] as String?;
+          final description = doc['description'] as String?;
+          if (name != null && description != null) {
+            listHashtags
+                .add({'id': doc.id, 'name': name, 'description': description});
+          }
         }
       }
     }
-    setState(() {});
-  }
 
-  Future<void> _updateCategory(
-      String id, String name, String description) async {
-    await FirebaseFirestore.instance
-        .collection('category')
-        .doc(id)
-        .update({'name': name, 'description': description});
-  }
+    Future<void> _updateCategory(
+        String id, String name, String description) async {
+      await FirebaseFirestore.instance
+          .collection('category')
+          .doc(id)
+          .update({'name': name, 'description': description});
+    }
 
-  @override
-  Widget build(BuildContext context) {
     return Scaffold(
       body: listHashtags.isEmpty
           ? const Center(
@@ -63,14 +49,9 @@ class _CategorieState extends State<Categorie> {
                     color: Colors.amber,
                   ),
                   onDismissed: (direction) async {
-                    final id = listHashtags[index]['id'];
-                    setState(() {
-                      listHashtags.removeAt(index);
-                    });
-                    await FirebaseFirestore.instance
-                        .collection('category')
-                        .doc(id)
-                        .delete();
+                    await ref
+                        .read(categorieProvider.notifier)
+                        .deleteCategory(listHashtags[index]['id']);
                   },
                   child: GestureDetector(
                     onTap: () async {
@@ -78,7 +59,7 @@ class _CategorieState extends State<Categorie> {
                           text: listHashtags[index]['name']);
                       final newDescriptionController = TextEditingController(
                           text: listHashtags[index]['description']);
-showDialog(
+                      showDialog(
                           context: context,
                           builder: (context) {
                             return AlertDialog(
@@ -116,13 +97,11 @@ showDialog(
                                       return;
                                     }
                                     final id = listHashtags[index]['id'];
-                                    await _updateCategory(
-                                        id, newName, newDescription);
-                                    setState(() {
-                                      listHashtags[index]['name'] = newName;
-                                      listHashtags[index]['description'] =
-                                          newDescription;
-                                    });
+                                    await ref
+                                        .read(categorieProvider.notifier)
+                                        .updateCategory(
+                                            id, newName, newDescription);
+
                                     Navigator.of(context).pop();
                                   },
                                   child: Text('Sauvegarder'),
@@ -143,10 +122,8 @@ showDialog(
             ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => const CategorieForm()));
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => const CategorieForm()));
         },
         child: Icon(Icons.add),
       ),
