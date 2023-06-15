@@ -11,29 +11,31 @@ class Categorie extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final projetState = ref.watch(categorieProvider.notifier);
     final listHashtags = projetState.state;
-    
-    Future<void> _getCategories() async {
-      final snapshot =
-          await FirebaseFirestore.instance.collection('category').get();
-      if (snapshot.docs.isNotEmpty) {
-        for (var doc in snapshot.docs) {
-          final name = doc['name'] as String?;
-          final description = doc['description'] as String?;
-          if (name != null && description != null) {
-            listHashtags
-                .add({'id': doc.id, 'name': name, 'description': description});
-          }
-        }
-      }
-    }
 
-    Future<void> _updateCategory(
-        String id, String name, String description) async {
-      await FirebaseFirestore.instance
-          .collection('category')
-          .doc(id)
-          .update({'name': name, 'description': description});
-    }
+    // listHashtags =  ref.read(categorieProvider.notifier).getCategories();
+
+    // Future<void> _getCategories() async {
+    //   final snapshot =
+    //       await FirebaseFirestore.instance.collection('category').get();
+    //   if (snapshot.docs.isNotEmpty) {
+    //     for (var doc in snapshot.docs) {
+    //       final name = doc['name'] as String?;
+    //       final description = doc['description'] as String?;
+    //       if (name != null && description != null) {
+    //         listHashtags
+    //             .add({'id': doc.id, 'name': name, 'description': description});
+    //       }
+    //     }
+    //   }
+    // }
+
+    // Future<void> _updateCategory(
+    //     String id, String name, String description) async {
+    //   await FirebaseFirestore.instance
+    //       .collection('category')
+    //       .doc(id)
+    //       .update({'name': name, 'description': description});
+    // }
 
     return Scaffold(
       body: listHashtags.isEmpty

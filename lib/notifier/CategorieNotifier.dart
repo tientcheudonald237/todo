@@ -5,14 +5,16 @@ class CategorieNotifier extends StateNotifier<List<Map<String, dynamic>>> {
   CategorieNotifier() : super([]);
 
   Future<void> getCategories() async {
-    final snapshot = await FirebaseFirestore.instance.collection('category').get();
+    final snapshot =
+        await FirebaseFirestore.instance.collection('category').get();
     List<Map<String, dynamic>> categories = [];
     if (snapshot.docs.isNotEmpty) {
       for (var doc in snapshot.docs) {
         final name = doc['name'] as String?;
         final description = doc['description'] as String?;
         if (name != null && description != null) {
-          categories.add({'id': doc.id, 'name': name, 'description': description});
+          categories
+              .add({'id': doc.id, 'name': name, 'description': description});
         }
       }
     }
@@ -24,11 +26,18 @@ class CategorieNotifier extends StateNotifier<List<Map<String, dynamic>>> {
       'name': name,
       'description': description,
     });
-    state = [...state, {'id': docRef.id, 'name': name, 'description': description}];
+    state = [
+      ...state,
+      {'id': docRef.id, 'name': name, 'description': description}
+    ];
   }
 
-  Future<void> updateCategory(String id, String name, String description) async {
-    await FirebaseFirestore.instance.collection('category').doc(id).update({'name': name, 'description': description});
+  Future<void> updateCategory(
+      String id, String name, String description) async {
+    await FirebaseFirestore.instance
+        .collection('category')
+        .doc(id)
+        .update({'name': name, 'description': description});
 
     final index = state.indexWhere((element) => element['id'] == id);
     if (index != -1) {

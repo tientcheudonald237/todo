@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:todo/notifier/ProjetNotifier.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:todo/services/riverpod.dart';
+import 'package:todo/notifier/ProjetNotifier.dart';
 
 import 'addProjet.dart';
 
@@ -10,8 +11,12 @@ class Projet extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    ref.read(projetProvider.notifier).getProjets();
+
     final projetState = ref.watch(projetProvider.notifier);
     final listHashtags = projetState.state;
+
+    
 
     return Scaffold(
       body: listHashtags.isEmpty

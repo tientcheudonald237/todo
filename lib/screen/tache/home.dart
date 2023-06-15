@@ -99,6 +99,17 @@ class _FormPageState extends State<FormPage> {
                   background: Container(
                     color: backgroundColor,
                   ),
+                  // onDismissed: (direction) => {
+                  //   setState(() {
+                  //     FirebaseFirestore.instance
+                  //         .collection('task')
+                  //         .doc(listHashtags[index]['id'])
+                  //         .delete() // Utilisation de l'identifiant du document
+                  //         .then((value) {
+                  //       // Vérification si le widget est toujours monté
+                  //     });
+                  //   })
+                  // },
                   child: Column(
                     children: [
                       SizedBox(height: 5),
