@@ -1,55 +1,54 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class ProjetNotifier extends StateNotifier<List<Map<String, dynamic>>> {
+class Projet {
+  final String nom;
+  final String description;
+  final String id;
+
+  Projet(this.nom, this.description, this.id);
+}
+
+final projetProvider = StateNotifierProvider<ProjetNotifier, List<Projet>>(
+  (ref) => ProjetNotifier(),
+);
+
+class ProjetNotifier extends StateNotifier<List<Projet>> {
+  // Référence à la collection Firestore pour les projets
+  final CollectionReference _projetCollection =
+      FirebaseFirestore.instance.collection('projet');
+
   ProjetNotifier() : super([]);
 
-  
-
-  Future<void> getProjets() async {
-    final snapshot =
-        await FirebaseFirestore.instance.collection('projet').get();
-    List<Map<String, dynamic>> categories = [];
-    if (snapshot.docs.isNotEmpty) {
-      for (var doc in snapshot.docs) {
-        final name = doc['nom'] as String?;
-        final description = doc['description'] as String?;
-        if (name != null && description != null) {
-          categories
-              .add({'id': doc.id, 'nom': name, 'description': description});
+  /// Récupérer la liste des projets depuis Firestore
+  Stream<List<Projet>> getProjets() =>
+      _projetCollection.snapshots().map((snapshot) {
+        final projets = <Projet>[];
+        for (final doc in snapshot.docs) {
+          projets.add(Projet(doc.get('nom') as String,
+              doc.get('description') as String, doc.id));
         }
-      }
-    }
-    state = categories;
-  }
+        return projets;
+      });
 
-  Future<void> addProjet(String name, String description) async {
-    final docRef = await FirebaseFirestore.instance.collection('projet').add({
-      'nom': name,
+  /// Ajouter un nouveau projet dans Firestore avec le nom et la description donnés
+  Future<void> addProjet(String nom, String description) async {
+    await _projetCollection.add({
+      'nom': nom,
       'description': description,
     });
-    state = [
-      ...state,
-      {'id': docRef.id, 'nom': name, 'description': description}
-    ];
   }
 
-  Future<void> updateProjet(String id, String name, String description) async {
-    await FirebaseFirestore.instance
-        .collection('projet')
-        .doc(id)
-        .update({'nom': name, 'description': description});
-
-    final index = state.indexWhere((element) => element['id'] == id);
-    if (index != -1) {
-      state[index]['nom'] = name;
-      state[index]['description'] = description;
-    }
+  /// Mettre à jour le projet avec le même ID dans Firestore avec les nouvelles valeurs données
+  Future<void> updateProjet(Projet updatedProjet) async {
+    await _projetCollection.doc(updatedProjet.id).update({
+      'nom': updatedProjet.nom,
+      'description': updatedProjet.description,
+    });
   }
 
-  Future<void> deleteprojet(String id) async {
-    await FirebaseFirestore.instance.collection('projet').doc(id).delete();
-
-    state = state.where((element) => element['id'] != id).toList();
+  /// Supprimer le projet donné de Firestore
+  Future<void> deleteProjet(Projet projet) async {
+    await _projetCollection.doc(projet.id).delete();
   }
 }

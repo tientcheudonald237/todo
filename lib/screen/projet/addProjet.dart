@@ -43,9 +43,9 @@ class AddProjet extends ConsumerWidget {
               const SizedBox(height: 16),
               ElevatedButton(
                 onPressed: () {
-                  ref.read(projetProvider.notifier).addProjet(
-                      nomController.text, descriptionController.text);
-                  Navigator.of(context).pop();
+                  // ref.read(projetProvider.notifier).addProjet(
+                  //     nomController.text, descriptionController.text);
+                  // Navigator.of(context).pop();
                 },
                 child: const Text('Add'),
               ),
