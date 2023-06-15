@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:todo/notifier/ProjetNotifier.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:todo/services/projetService.dart';
 import 'package:todo/provider/projetProvider.dart';
@@ -76,7 +75,7 @@ class Projet extends ConsumerWidget {
                             if (newName.isEmpty || newDescription.isEmpty) {
                               return;
                             }
-                            projetService.updateProjet(id, name, description);
+                            projetService.updateProjet(id, newName, newDescription);
                             Navigator.of(context).pop();
                           },
                           child: Text('Sauvegarder'),

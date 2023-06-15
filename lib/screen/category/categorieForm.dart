@@ -1,10 +1,7 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:todo/services/riverpod.dart';
-import 'package:todo/notifier/CategorieNotifier.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:todo/services/categoryService.dart';
 
 class CategorieForm extends ConsumerWidget {
   const CategorieForm({super.key});
@@ -14,28 +11,7 @@ class CategorieForm extends ConsumerWidget {
     final _formKey = GlobalKey<FormState>();
     TextEditingController nomController = TextEditingController();
     TextEditingController descriptionController = TextEditingController();
-
-    Future Valide() async {
-      try {
-        final usersRef = FirebaseFirestore.instance.collection('category');
-        await usersRef.doc().set({
-          'description': descriptionController.text.trim(),
-          'name': nomController.text.trim(),
-        });
-
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text(
-              'nouveau post ajouter',
-              style: TextStyle(color: Colors.amber),
-            ),
-            backgroundColor: Colors.blue,
-          ),
-        );
-      } on FirebaseAuthException catch (e) {
-        print('error failed : $e');
-      }
-    }
+    CategoryService categoryService = new CategoryService();
 
     return Scaffold(
       body: Form(
@@ -100,8 +76,8 @@ class CategorieForm extends ConsumerWidget {
                         color: Colors.blue,
                         child: Text('Valider'),
                         onPressed: () {
-                          ref.read(categorieProvider.notifier).addCategory(
-                              nomController.text.trim(), descriptionController.text.trim());
+                          categoryService.addCategory(nomController.text.trim(),
+                              descriptionController.text.trim());
                         }),
                   ],
                 ),

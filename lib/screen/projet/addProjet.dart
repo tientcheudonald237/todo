@@ -1,18 +1,15 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'dart:io';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:todo/services/riverpod.dart';
+import '../../services/projetService.dart';
 
 class AddProjet extends ConsumerWidget {
   const AddProjet({Key? key}) : super(key: key);
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final TextEditingController nomController = TextEditingController();
     final TextEditingController descriptionController = TextEditingController();
+    ProjetService projetService = ProjetService();
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Add Project'),
@@ -43,9 +40,8 @@ class AddProjet extends ConsumerWidget {
               const SizedBox(height: 16),
               ElevatedButton(
                 onPressed: () {
-                  // ref.read(projetProvider.notifier).addProjet(
-                  //     nomController.text, descriptionController.text);
-                  // Navigator.of(context).pop();
+                  projetService.addProjet(
+                      nomController.text, descriptionController.text);
                 },
                 child: const Text('Add'),
               ),

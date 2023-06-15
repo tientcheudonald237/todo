@@ -6,7 +6,8 @@ class ProjetService {
 
   // CREATE TODO
 
-  void addProjet(Projet model) {
+  void addProjet(String nom, String description) {
+    Projet model = new Projet(id: '', nom: nom, description: description);
     todoCollection.add(model.toMap());
   }
 
