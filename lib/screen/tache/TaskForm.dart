@@ -8,6 +8,9 @@ import 'package:todo/services/riverpod.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:intl/intl.dart';
 import 'package:todo/model/Projet.dart';
+import 'package:todo/services/taskService.dart';
+import 'package:todo/provider/TaskProvider.dart';
+import 'package:todo/model/User.dart';
 
 import '../../model/Category.dart';
 
@@ -24,20 +27,23 @@ class _ProfilPageState extends ConsumerState<TaskForm> {
   TextEditingController nomController = TextEditingController();
   TextEditingController prenomController = TextEditingController();
   String? _selectedProjet;
+  String? _selectedUser;
   late String formattedDate;
 
   File? image;
   TextEditingController dateinput = TextEditingController();
   String? _selectedCategory;
-  final List<String> _categories = [];
+  // final List<String> _categories = [];
   List<Projet> projects = [];
   List<Category> categories = [];
+  List<UserState> users = [];
 
   @override
   void initState() {
     super.initState();
-    fetchProjects();
-    fetchCategries();
+    //fetchProjects();
+    //fetchCategries();
+    fetchUsers();
   }
 
   Future<void> fetchProjects() async {
@@ -48,6 +54,17 @@ class _ProfilPageState extends ConsumerState<TaskForm> {
     setState(() {
       projects = projectDocuments
           .map((projectDoc) => Projet.fromJson(projectDoc.data()))
+          .toList();
+    });
+  }
+
+  Future<void> fetchUsers() async {
+    final userCollectionRef = FirebaseFirestore.instance.collection('user');
+    final snapshot = await userCollectionRef.get();
+    final userDocuments = snapshot.docs;
+    setState(() {
+      users = userDocuments
+          .map((userDoc) => UserState.fromJson(userDoc.data()))
           .toList();
     });
   }
@@ -108,8 +125,9 @@ class _ProfilPageState extends ConsumerState<TaskForm> {
           'userid': user.uid,
           'datedebut': DateTime.now().toIso8601String().substring(0, 10),
           'datefin': formattedDate,
-          'categorie': _selectedCategory,
+          'category': _selectedCategory,
           'projet': _selectedProjet,
+          'otheruserid': _selectedUser
         })
         .then((value) => ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(
@@ -122,17 +140,17 @@ class _ProfilPageState extends ConsumerState<TaskForm> {
     prenomController.text = '';
   }
 
-  Future<void> _loadCategories() async {
-    final QuerySnapshot snapshot =
-        await FirebaseFirestore.instance.collection('category').get();
-    if (snapshot.docs.isNotEmpty) {
-      final List<String> categories =
-          snapshot.docs.map((doc) => doc.get('name') as String).toList();
-      setState(() {
-        _categories.addAll(categories);
-      });
-    }
-  }
+  // Future<void> _loadCategories() async {
+  //   final QuerySnapshot snapshot =
+  //       await FirebaseFirestore.instance.collection('category').get();
+  //   if (snapshot.docs.isNotEmpty) {
+  //     final List<String> categories =
+  //         snapshot.docs.map((doc) => doc.get('nom') as String).toList();
+  //     setState(() {
+  //       _categories.addAll(categories);
+  //     });
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -231,42 +249,63 @@ class _ProfilPageState extends ConsumerState<TaskForm> {
                     },
                   ),
                 ),
+                // Padding(
+                //   padding:
+                //       const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                //   child: DropdownButtonFormField(
+                //     decoration: const InputDecoration(
+                //         border: OutlineInputBorder(), labelText: "Category"),
+                //     value: _selectedCategory,
+                //     onChanged: (newValue) {
+                //       setState(() {
+                //         _selectedCategory = newValue;
+                //       });
+                //     },
+                //     items: categories
+                //         .map((category) => DropdownMenuItem(
+                //               value: category.nom,
+                //               child: Text(category.nom),
+                //             ))
+                //         .toList(),
+                //   ),
+                // ),
+                // Padding(
+                //   padding:
+                //       const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                //   child: DropdownButtonFormField(
+                //     decoration: const InputDecoration(
+                //         border: OutlineInputBorder(), labelText: "Projet"),
+                //     value: _selectedProjet,
+                //     onChanged: (newValue) {
+                //       setState(() {
+                //         _selectedProjet = newValue;
+                //       });
+                //     },
+                //     items: projects
+                //         .map((project) => DropdownMenuItem(
+                //               value: project.nom,
+                //               child: Text(project.nom),
+                //             ))
+                //         .toList(),
+                //   ),
+                // ),
                 Padding(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
                   child: DropdownButtonFormField(
                     decoration: const InputDecoration(
-                        border: OutlineInputBorder(), labelText: "Category"),
-                    value: _selectedCategory,
+                        border: OutlineInputBorder(),
+                        labelText: "Collaborateur"),
+                    value: _selectedUser,
                     onChanged: (newValue) {
                       setState(() {
-                        _selectedCategory = newValue;
+                        _selectedUser = newValue;
                       });
                     },
-                    items: categories
-                        .map((category) => DropdownMenuItem(
-                              value: category.nom,
-                              child: Text(category.nom),
-                            ))
-                        .toList(),
-                  ),
-                ),
-                Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
-                  child: DropdownButtonFormField(
-                    decoration: const InputDecoration(
-                        border: OutlineInputBorder(), labelText: "Projet"),
-                    value: _selectedProjet,
-                    onChanged: (newValue) {
-                      setState(() {
-                        _selectedProjet = newValue;
-                      });
-                    },
-                    items: projects
-                        .map((project) => DropdownMenuItem(
-                              value: project.nom,
-                              child: Text(project.nom),
+                    items: users
+                        .map((user) => DropdownMenuItem(
+                              value: user.uid,
+                              child: Text(user.nom),
                             ))
                         .toList(),
                   ),

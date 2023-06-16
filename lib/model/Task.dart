@@ -30,16 +30,16 @@ class Task {
   static Task fromJson(Map<String, dynamic> json) {
     return Task(
         id: json['id'],
-        userid: json['id'],
-        datedebut: json[''],
-        datefin: json[''],
-        nom: json[''],
-        picture: json[''],
-        projet: json[''],
-        statut: json[''],
-        description: json[''],
-        otheruserid: json[''],
-        category: json['']);
+        userid: json['userid'],
+        datedebut: json['datedebut'],
+        datefin: json['datefin'],
+        nom: json['nom'],
+        picture: json['picture'],
+        projet: json['projet'],
+        statut: json['statut'],
+        description: json['description'],
+        otheruserid: json['otheruserid'],
+        category: json['category']);
   }
 
   Map<String, dynamic> toMap() {
@@ -60,30 +60,30 @@ class Task {
   factory Task.fromMap(Map<String, dynamic> map) {
     return Task(
         id: map['id'],
-        userid: map['id'] as String,
-        datedebut: map[''] as String,
-        datefin: map[''] as String,
-        nom: map[''] as String,
-        picture: map[''] as String,
-        projet: map[''] as String,
-        statut: map[''] as String,
-        description: map[''] as String,
-        otheruserid: map[''] as String,
-        category: map[''] as String);
+        userid: map['userid'] as String,
+        datedebut: map['datedebut'] as String,
+        datefin: map['datefin'] as String,
+        nom: map['nom'] as String,
+        picture: map['picture'] as String,
+        projet: map['projet'] as String,
+        statut: map['statut'] as String,
+        description: map['description'] as String,
+        otheruserid: map['otheruserid'] as String,
+        category: map['category'] as String);
   }
 
   factory Task.fromSnapshot(DocumentSnapshot<Map<String, dynamic>> doc) {
     return Task(
         id: doc.id,
-        userid: doc['id'],
-        datedebut: doc[''],
-        datefin: doc[''],
-        nom: doc[''],
-        picture: doc[''],
-        projet: doc[''],
-        statut: doc[''],
-        description: doc[''],
-        otheruserid: doc[''],
-        category: doc['']);
+        userid: doc['userid'],
+        datedebut: doc['datedebut'],
+        datefin: doc['datefin'],
+        nom: doc['nom'],
+        picture: doc['picture'],
+        projet: doc['projet'],
+        statut: doc['statut'],
+        description: doc['description'],
+        otheruserid: doc['otheruserid'],
+        category: doc['category']);
   }
 }

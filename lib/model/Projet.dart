@@ -29,8 +29,8 @@ class Projet {
   factory Projet.fromMap(Map<String, dynamic> map) {
     return Projet(
       id: map['id'],
-      nom: map['titleTask'] as String,
-      description: map['descriptionTask'] as String,
+      nom: map['nom'] as String,
+      description: map['description'] as String,
     );
   }
 

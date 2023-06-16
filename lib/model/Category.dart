@@ -30,8 +30,8 @@ class Category {
   factory Category.fromMap(Map<String, dynamic> map) {
     return Category(
       id: map['id'],
-      nom: map['titleTask'] as String,
-      description: map['descriptionTask'] as String,
+      nom: map['nom'] as String,
+      description: map['description'] as String,
     );
   }
 
