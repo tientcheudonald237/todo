@@ -20,6 +20,14 @@ class Category {
     );
   }
 
+  static Category fromJsonf(Map<String, dynamic> json) {
+    return Category(
+      id: json['id'],
+      nom: json['nom'],
+      description: json['description'],
+    );
+  }
+
    Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'nom': nom,

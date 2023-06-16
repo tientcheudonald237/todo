@@ -41,8 +41,8 @@ class _ProfilPageState extends ConsumerState<TaskForm> {
   @override
   void initState() {
     super.initState();
-    //fetchProjects();
-    //fetchCategries();
+    fetchProjects();
+    fetchCategries();
     fetchUsers();
   }
 
@@ -76,7 +76,7 @@ class _ProfilPageState extends ConsumerState<TaskForm> {
     final categoryDocuments = snapshot.docs;
     setState(() {
       categories = categoryDocuments
-          .map((categorytDoc) => Category.fromJson(categorytDoc.data()))
+          .map((categorytDoc) => Category.fromJsonf(categorytDoc.data()))
           .toList();
     });
   }
@@ -139,18 +139,6 @@ class _ProfilPageState extends ConsumerState<TaskForm> {
     nomController.text = '';
     prenomController.text = '';
   }
-
-  // Future<void> _loadCategories() async {
-  //   final QuerySnapshot snapshot =
-  //       await FirebaseFirestore.instance.collection('category').get();
-  //   if (snapshot.docs.isNotEmpty) {
-  //     final List<String> categories =
-  //         snapshot.docs.map((doc) => doc.get('nom') as String).toList();
-  //     setState(() {
-  //       _categories.addAll(categories);
-  //     });
-  //   }
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -249,46 +237,46 @@ class _ProfilPageState extends ConsumerState<TaskForm> {
                     },
                   ),
                 ),
-                // Padding(
-                //   padding:
-                //       const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
-                //   child: DropdownButtonFormField(
-                //     decoration: const InputDecoration(
-                //         border: OutlineInputBorder(), labelText: "Category"),
-                //     value: _selectedCategory,
-                //     onChanged: (newValue) {
-                //       setState(() {
-                //         _selectedCategory = newValue;
-                //       });
-                //     },
-                //     items: categories
-                //         .map((category) => DropdownMenuItem(
-                //               value: category.nom,
-                //               child: Text(category.nom),
-                //             ))
-                //         .toList(),
-                //   ),
-                // ),
-                // Padding(
-                //   padding:
-                //       const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
-                //   child: DropdownButtonFormField(
-                //     decoration: const InputDecoration(
-                //         border: OutlineInputBorder(), labelText: "Projet"),
-                //     value: _selectedProjet,
-                //     onChanged: (newValue) {
-                //       setState(() {
-                //         _selectedProjet = newValue;
-                //       });
-                //     },
-                //     items: projects
-                //         .map((project) => DropdownMenuItem(
-                //               value: project.nom,
-                //               child: Text(project.nom),
-                //             ))
-                //         .toList(),
-                //   ),
-                // ),
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                  child: DropdownButtonFormField(
+                    decoration: const InputDecoration(
+                        border: OutlineInputBorder(), labelText: "Category"),
+                    value: _selectedCategory,
+                    onChanged: (newValue) {
+                      setState(() {
+                        _selectedCategory = newValue;
+                      });
+                    },
+                    items: categories
+                        .map((category) => DropdownMenuItem(
+                              value: category.nom,
+                              child: Text(category.nom),
+                            ))
+                        .toList(),
+                  ),
+                ),
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                  child: DropdownButtonFormField(
+                    decoration: const InputDecoration(
+                        border: OutlineInputBorder(), labelText: "Projet"),
+                    value: _selectedProjet,
+                    onChanged: (newValue) {
+                      setState(() {
+                        _selectedProjet = newValue;
+                      });
+                    },
+                    items: projects
+                        .map((project) => DropdownMenuItem(
+                              value: project.nom,
+                              child: Text(project.nom),
+                            ))
+                        .toList(),
+                  ),
+                ),
                 Padding(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
