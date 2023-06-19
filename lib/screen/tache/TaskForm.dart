@@ -112,7 +112,7 @@ class _ProfilPageState extends ConsumerState<TaskForm> {
   Future<void> ajouterDocument() async {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
-        content: Text('please wet...'),
+        content: Text('please wait...'),
       ),
     );
     final user = ref.read(userProvider);

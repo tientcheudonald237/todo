@@ -24,6 +24,11 @@ class _SignInState extends ConsumerState<SignIn> {
   Widget build(BuildContext context) {
     Future signIn() async {
       try {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('please wait...'),
+          ),
+        );
         // -------------------------------------------------------------------------
 
         await FirebaseAuth.instance.signInWithEmailAndPassword(
@@ -58,12 +63,17 @@ class _SignInState extends ConsumerState<SignIn> {
           // print(uid);
         } else {
           print('No user found with email ');
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('No user found with email...'),
+            ),
+          );
         }
 
         // -------------------------------------------------------------------------
 
         // -------------------------------------------------------------------------
-        
+
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => const HomePages()),
