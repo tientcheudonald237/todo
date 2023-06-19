@@ -4,6 +4,7 @@ import 'category/categorie.dart';
 import 'tache/home.dart';
 import 'profil/profil.dart';
 import 'projet/Projet.dart';
+import './authentification/signIn.dart';
 
 class HomePages extends StatefulWidget {
   const HomePages({super.key});
@@ -53,6 +54,12 @@ class _HomePages extends State<HomePages> {
                   _yPosition = details.globalPosition.dy + _dy;
                 });
               },
+              onLongPress: () {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => const SignIn()),
+                );
+              },
               child: Container(
                 width: 50,
                 height: 50,
@@ -61,7 +68,7 @@ class _HomePages extends State<HomePages> {
                   shape: BoxShape.circle,
                 ),
                 child: Icon(
-                  Icons.home,
+                  Icons.logout,
                   color: Colors.white,
                 ),
               ),

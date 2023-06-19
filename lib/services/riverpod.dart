@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:todo/model/User.dart';
-import 'package:todo/notifier/CategorieNotifier.dart';
+
 
 final userProvider = Provider<User>(
   (ref) {
@@ -8,4 +8,3 @@ final userProvider = Provider<User>(
   },
 );
 
-final categorieProvider = StateNotifierProvider((ref) => CategorieNotifier());
