@@ -14,6 +14,9 @@ class CategorieForm extends ConsumerWidget {
     CategoryService categoryService = new CategoryService();
 
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('Add Category'),
+      ),
       body: Form(
         key: _formKey,
         child: SingleChildScrollView(
@@ -72,12 +75,13 @@ class CategorieForm extends ConsumerWidget {
                   children: <Widget>[
                     MaterialButton(
                         height: 50,
-                        minWidth: 380,
+                        minWidth: 200,
                         color: Colors.blue,
                         child: Text('Valider'),
                         onPressed: () {
                           categoryService.addCategory(nomController.text.trim(),
                               descriptionController.text.trim());
+                          Navigator.pop(context);
                         }),
                   ],
                 ),

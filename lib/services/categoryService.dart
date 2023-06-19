@@ -6,9 +6,16 @@ class CategoryService {
 
   // CREATE TODO
 
-  void addCategory(String nom, String description) {
-    Category model = new Category(id: '', nom: nom, description: description);
-    todoCollection.add(model.toMap());
+  // void addCategory(String nom, String description) {
+  //   Category model = new Category(id: '', nom: nom, description: description);
+  //   todoCollection.add(model.toMap());
+  // }
+
+  void addCategory(String nom, String description) async {
+    Category model = Category(id: '', nom: nom, description: description);
+    DocumentReference docRef = await todoCollection.add(model.toMap());
+    // Mettre à jour le champ "id" avec l'ID généré par Firebase
+    await docRef.update({"id": docRef.id});
   }
 
   //Delete

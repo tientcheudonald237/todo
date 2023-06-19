@@ -59,8 +59,10 @@ class _ProfilPageState extends ConsumerState<TaskForm> {
   }
 
   Future<void> fetchUsers() async {
+    final user = ref.read(userProvider);
     final userCollectionRef = FirebaseFirestore.instance.collection('user');
-    final snapshot = await userCollectionRef.get();
+    final snapshot =
+        await userCollectionRef.where('uid', isNotEqualTo: user.uid).get();
     final userDocuments = snapshot.docs;
     setState(() {
       users = userDocuments
@@ -108,6 +110,11 @@ class _ProfilPageState extends ConsumerState<TaskForm> {
 
 // Ajouter un document avec des champs
   Future<void> ajouterDocument() async {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('please wet...'),
+      ),
+    );
     final user = ref.read(userProvider);
     final Reference storageReference = FirebaseStorage.instance
         .ref()
@@ -127,13 +134,15 @@ class _ProfilPageState extends ConsumerState<TaskForm> {
           'datefin': formattedDate,
           'category': _selectedCategory,
           'projet': _selectedProjet,
-          'otheruserid': _selectedUser
+          'otheruserid': _selectedUser ?? ''
         })
-        .then((value) => ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Tache AJouter !'),
-              ),
-            ))
+        .then((value) => {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Task add !'),
+                ),
+              )
+            })
         .catchError(
             (error) => print("Erreur lors de l'ajout du document : $error"));
     nomController.text = '';

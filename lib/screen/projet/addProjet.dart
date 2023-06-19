@@ -14,7 +14,7 @@ class AddProjet extends ConsumerWidget {
       appBar: AppBar(
         title: const Text('Add Project'),
       ),
-      body: Form(
+      body: Center(
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           child: Column(
@@ -42,6 +42,7 @@ class AddProjet extends ConsumerWidget {
                 onPressed: () {
                   projetService.addProjet(
                       nomController.text, descriptionController.text);
+                  Navigator.pop(context);
                 },
                 child: const Text('Add'),
               ),

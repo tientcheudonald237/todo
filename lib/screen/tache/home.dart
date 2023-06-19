@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:todo/screen/tache/TaskForm.dart';
+import 'package:todo/services/riverpod.dart';
 import 'package:todo/services/taskService.dart';
 import 'package:todo/provider/TaskProvider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -38,11 +39,24 @@ class FormPage extends ConsumerWidget {
       return Center(child: CircularProgressIndicator());
     }
 
+    final user = ref.read(userProvider);
+
     return Scaffold(
       body: ListView.builder(
-        itemCount: taskData.value?.length ?? 0,
+        // itemCount: taskData.value?.length ?? 0,
+        itemCount: taskData.value
+                ?.where((task) =>
+                    task?.userid == user.uid || task?.otheruserid == user.uid)
+                .length ??
+            0,
+
         itemBuilder: (context, index) {
-          final task = taskData.value?[index];
+          // final task = taskData.value?[index];
+          final task = taskData.value
+              ?.where((task) =>
+                  task?.userid == user.uid || task?.otheruserid == user.uid)
+              .toList()[index];
+
           Color backgroundColor;
           final statut = task!.statut;
 
