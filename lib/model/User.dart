@@ -1,4 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 
 class UserState {
   final String uid;
@@ -14,6 +16,45 @@ class UserState {
     required this.prenom,
     required this.pathPhoto,
   });
+
+   static UserState fromJson(Map<String, dynamic> json) {
+    return UserState(
+      uid: json['uid'],
+      email:json['email'],
+      nom: json['nom'],
+      prenom: json['prenom'],
+      pathPhoto: json['pathphoto']
+    );
+  }
+
+   Map<String, dynamic> toMap() {
+    return <String, dynamic>{
+      'nom': nom,
+      'email': email,
+      'prenom':prenom,
+      'pathphoto':pathPhoto,
+    };
+  }
+
+  factory UserState.fromMap(Map<String, dynamic> map) {
+    return UserState(
+      uid: map['uid'],
+      email:map['email'] as String,
+      nom: map['nom'] as String,
+      prenom: map['prenom'] as String,
+      pathPhoto: map['pathphoto']as String,
+    );
+  }
+
+  factory UserState.fromSnapshot(DocumentSnapshot<Map<String, dynamic>> doc) {
+    return UserState(
+      uid: doc['uid'],
+      email:doc['email'],
+      nom: doc['nom'],
+      prenom: doc['prenom'],
+      pathPhoto: doc['pathphoto']
+    );
+  }
 }
 
 class User extends StateNotifier<UserState> {

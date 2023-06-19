@@ -8,6 +8,9 @@ import 'package:todo/services/riverpod.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:intl/intl.dart';
 import 'package:todo/model/Projet.dart';
+import 'package:todo/services/taskService.dart';
+import 'package:todo/provider/TaskProvider.dart';
+import 'package:todo/model/User.dart';
 
 import '../../model/Category.dart';
 
@@ -24,20 +27,23 @@ class _ProfilPageState extends ConsumerState<TaskForm> {
   TextEditingController nomController = TextEditingController();
   TextEditingController prenomController = TextEditingController();
   String? _selectedProjet;
+  String? _selectedUser;
   late String formattedDate;
 
   File? image;
   TextEditingController dateinput = TextEditingController();
   String? _selectedCategory;
-  final List<String> _categories = [];
+  // final List<String> _categories = [];
   List<Projet> projects = [];
   List<Category> categories = [];
+  List<UserState> users = [];
 
   @override
   void initState() {
     super.initState();
     fetchProjects();
     fetchCategries();
+    fetchUsers();
   }
 
   Future<void> fetchProjects() async {
@@ -52,6 +58,19 @@ class _ProfilPageState extends ConsumerState<TaskForm> {
     });
   }
 
+  Future<void> fetchUsers() async {
+    final user = ref.read(userProvider);
+    final userCollectionRef = FirebaseFirestore.instance.collection('user');
+    final snapshot =
+        await userCollectionRef.where('uid', isNotEqualTo: user.uid).get();
+    final userDocuments = snapshot.docs;
+    setState(() {
+      users = userDocuments
+          .map((userDoc) => UserState.fromJson(userDoc.data()))
+          .toList();
+    });
+  }
+
   Future<void> fetchCategries() async {
     final categoryCollectionRef =
         FirebaseFirestore.instance.collection('category');
@@ -59,7 +78,7 @@ class _ProfilPageState extends ConsumerState<TaskForm> {
     final categoryDocuments = snapshot.docs;
     setState(() {
       categories = categoryDocuments
-          .map((categorytDoc) => Category.fromJson(categorytDoc.data()))
+          .map((categorytDoc) => Category.fromJsonf(categorytDoc.data()))
           .toList();
     });
   }
@@ -91,6 +110,11 @@ class _ProfilPageState extends ConsumerState<TaskForm> {
 
 // Ajouter un document avec des champs
   Future<void> ajouterDocument() async {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('please wet...'),
+      ),
+    );
     final user = ref.read(userProvider);
     final Reference storageReference = FirebaseStorage.instance
         .ref()
@@ -108,30 +132,21 @@ class _ProfilPageState extends ConsumerState<TaskForm> {
           'userid': user.uid,
           'datedebut': DateTime.now().toIso8601String().substring(0, 10),
           'datefin': formattedDate,
-          'categorie': _selectedCategory,
+          'category': _selectedCategory,
           'projet': _selectedProjet,
+          'otheruserid': _selectedUser ?? ''
         })
-        .then((value) => ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Tache AJouter !'),
-              ),
-            ))
+        .then((value) => {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Task add !'),
+                ),
+              )
+            })
         .catchError(
             (error) => print("Erreur lors de l'ajout du document : $error"));
     nomController.text = '';
     prenomController.text = '';
-  }
-
-  Future<void> _loadCategories() async {
-    final QuerySnapshot snapshot =
-        await FirebaseFirestore.instance.collection('category').get();
-    if (snapshot.docs.isNotEmpty) {
-      final List<String> categories =
-          snapshot.docs.map((doc) => doc.get('name') as String).toList();
-      setState(() {
-        _categories.addAll(categories);
-      });
-    }
   }
 
   @override
@@ -267,6 +282,27 @@ class _ProfilPageState extends ConsumerState<TaskForm> {
                         .map((project) => DropdownMenuItem(
                               value: project.nom,
                               child: Text(project.nom),
+                            ))
+                        .toList(),
+                  ),
+                ),
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                  child: DropdownButtonFormField(
+                    decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: "Collaborateur"),
+                    value: _selectedUser,
+                    onChanged: (newValue) {
+                      setState(() {
+                        _selectedUser = newValue;
+                      });
+                    },
+                    items: users
+                        .map((user) => DropdownMenuItem(
+                              value: user.uid,
+                              child: Text(user.nom),
                             ))
                         .toList(),
                   ),
