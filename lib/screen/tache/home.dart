@@ -73,7 +73,14 @@ class FormPage extends ConsumerWidget {
             background: Container(
               color: backgroundColor,
             ),
-            onDismissed: (direction) => {taskService.deleteTask(task.id)},
+            onDismissed: (direction) {
+              try {
+                taskService.deleteTask(task.id);
+              } catch (e) {
+                // Gérez toute erreur éventuelle ici
+                print('Erreur lors de la suppression de la tâche : $e');
+              }
+            },
             child: Column(
               children: [
                 SizedBox(height: 5),
